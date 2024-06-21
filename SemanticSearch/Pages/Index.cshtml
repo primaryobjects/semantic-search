@@ -1,0 +1,44 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Semantic Search Demo";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Semantic Search</h1>
+    <form id="searchForm">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <div class="mb-1">
+                <label for="txtDatabase">Enter a comma-separated list of texts.</label>
+                <input type="text" class="form-control" id="txtData" name="txtData" placeholder="Enter phrases for the database." />
+            </div>
+            <div class="mb-1">
+                <label for="txtQuery">Enter a query.</label>
+                <input type="text" class="form-control" id="txtQuery" name="txtQuery" placeholder="Enter a query." />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    
+    <div id="searchResult" class="mt-1 mb-1"></div>
+
+    <div id="similarities" class="mt-1">
+        <table class="table" id="similaritiesTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Phrase</th>
+                    <th>Similarity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="spinner" style="display: none;" class="mt-2">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+</div>
