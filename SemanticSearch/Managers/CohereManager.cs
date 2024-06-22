@@ -56,14 +56,14 @@ namespace SemanticSearch.Managers
             var responseBody = await response.Content.ReadAsStringAsync();
 
             JObject jsonObject = JObject.Parse(responseBody);
-            JArray embeddings = (JArray)jsonObject["embeddings"];
+            JArray embeddings = (JArray)jsonObject["embeddings"]!;
 
             int index = 0;
             foreach (JArray embedding in embeddings.Cast<JArray>())
             {
                 List<float> sublist = [];
 
-                List<double> embeddingValues = embedding.ToObject<List<double>>();
+                List<double> embeddingValues = embedding.ToObject<List<double>>()!;
                 foreach (double value in embeddingValues)
                 {
                     sublist.Add((float)value);

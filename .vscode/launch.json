@@ -3,5 +3,45 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "name": "Launch SemanticSearch",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/SemanticSearch/bin/Debug/net8.0/SemanticSearch.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/SemanticSearch",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Publish",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-and-publish",
+            "program": "${workspaceFolder}/SemanticSearch/bin/Debug/net8.0/SemanticSearch.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/publish",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ]
 }
