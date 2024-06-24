@@ -27,10 +27,11 @@
                     const color = 255 * item.score;
 
                     // Set the color to red or green according to match.
-                    const colorStyle = `rgb(${item.score < 0.5 ? `${color}, 0` : `0, ${color}`}, 0)`;
+                    const colorStyle = `color: rgb(${item.score < 0.5 && data.result !== item.phrase ? `${color}, 0` : `0, ${color}`}, 0)`;
+                    const textStyle = data.result === item.phrase ? 'color: green' : '';
 
                     // Insert the row in the
-                    var row = '<tr><td>' + item.phrase + `</td><td style='color: ${colorStyle};'>` + item.score + '</td></tr>';
+                    var row = `<tr><td style='${textStyle}'>${item.phrase}</td><td style='${colorStyle};'>${item.score}</td></tr>`;
                     $('#similaritiesTable tbody').append(row);
                 });
 
