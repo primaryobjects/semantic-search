@@ -8,6 +8,7 @@
             "name": "Launch SemanticSearch",
             "type": "coreclr",
             "request": "launch",
+            "preLaunchTask": "dotnet-run",
             "program": "${workspaceFolder}/SemanticSearch/bin/Debug/net8.0/SemanticSearch.dll",
             "args": [],
             "cwd": "${workspaceFolder}/SemanticSearch",

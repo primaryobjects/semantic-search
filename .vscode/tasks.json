@@ -2,10 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "dotnet run",
-            "command": "dotnet",
-            "type": "process",
-            "args": ["run"],
+            "label": "dotnet-run",
+            "command": "cd SemanticSearch; dotnet build; cd ..;",
+            "type": "shell",
             "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",

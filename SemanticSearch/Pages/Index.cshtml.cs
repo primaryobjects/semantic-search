@@ -8,34 +8,24 @@ public class IndexModel(ILogger<IndexModel> logger) : PageModel
 {
     private readonly ILogger<IndexModel> _logger = logger;
 
-    public IActionResult OnPostSearch(string data, string query)
+    public async Task<IActionResult> OnPostSearch(string data, string query)
     {
-        // Get embeddings for the database strings.
-        var dataEmbeddings = CohereManager.GetEmbeddings(data.Split(",")).GetAwaiter().GetResult();
+        // Split the data by comma and append the query to the end of the list.
+        var items = string.Join(",", data, query).Split(",");
+        items = items.Select(s => s.Trim()).ToArray();
 
-        // Get embeddings for the query.
-        var queryEmbeddings = CohereManager.GetEmbeddings([query]).GetAwaiter().GetResult();
-        var queryEmbedding = queryEmbeddings.First();
+        // Get embeddings.
+        var dataEmbeddings = await CohereManager.GetEmbeddings(items);
 
-        // Calculate the cosine similarity for the query against each database string.
-        List<Tuple<int, float>> similarities = [];
-        for (int i=0; i<dataEmbeddings.Count; i++)
-        {
-            float similarity = CohereManager.CosineSimilarity(dataEmbeddings[i].Value, queryEmbedding.Value);
-            similarities.Add(new Tuple<int, float>(i, similarity));
-        }
+        // Get the query embedding from the end of the list.
+        var queryEmbedding = dataEmbeddings.Last();
 
-        // Sort the results.
-        var result = similarities.OrderByDescending(x => x.Item2).Take(1).ToList();
-        var index = result.First().Item1;
+        // Get the similarity scores and best match.
+        var similarities = SimilarityManager.GetSimilarities(queryEmbedding, dataEmbeddings.Take(dataEmbeddings.Count - 1));
 
-        // Return the top matching query and the list of similarities.
-        var response = new Dictionary<string, object>
-        {
-            { "result", dataEmbeddings[index].Key },
-            { "similarities", similarities.Select(x => new { index = x.Item1, phrase = dataEmbeddings[x.Item1].Key, similarity = x.Item2 }) }
-        };
-
-        return new JsonResult(response);
+        return new JsonResult(new {
+            result = similarities.Key,
+            similarities = similarities.Value.Select(similarity => new { phrase = similarity.Key, score = similarity.Value })
+        });
     }
 }

@@ -23,7 +23,14 @@
 
                 // Show the list of similarities.
                 $.each(data.similarities, function(i, item) {
-                    var row = '<tr><td>' + item.phrase + '</td><td>' + item.similarity + '</td></tr>';
+                    // Set a color intensity for this score.
+                    const color = 255 * item.score;
+
+                    // Set the color to red or green according to match.
+                    const colorStyle = `rgb(${item.score < 0.5 ? `${color}, 0` : `0, ${color}`}, 0)`;
+
+                    // Insert the row in the
+                    var row = '<tr><td>' + item.phrase + `</td><td style='color: ${colorStyle};'>` + item.score + '</td></tr>';
                     $('#similaritiesTable tbody').append(row);
                 });
 
