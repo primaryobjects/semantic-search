@@ -48,6 +48,12 @@ To build a deployment for hosting on a web server, use the following steps.
 
 The web application will begin running on port 5000. The executable is a self-contained web server, similar to a node.js application, and may be deployed to a Windows web server or Microsoft Azure.
 
+### Persist Embeddings
+
+Applications should save retrieved embeddings to a database to prevent the need to call the LLM for documents that have already been processed. Ideally, this should be a vector database, which is designed to store embeddings and perform built-in similarity calculations. However, to keep this project simple, embeddings are *always* retrieved from the LLM.
+
+See the branch [database](https://github.com/primaryobjects/SemanticSearch/tree/database) for saving the embeddings to a local database as a cache.
+
 ## Tech Stack
 
 - Visual Studio Code
