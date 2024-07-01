@@ -21,8 +21,11 @@ public class IndexModel(ILogger<IndexModel> logger) : PageModel
         // Get LLM embeddings.
         var dataEmbeddings = await CohereManager.GetEmbeddings([.. itemsToProcess]);
 
-        // Merge loaded documents and save new documents.
-        UpdateDocuments(itemsProcessed, dataEmbeddings);
+        // Save new document embeddings.
+        SaveDocuments(dataEmbeddings);
+
+        // Merge loaded documents.
+        dataEmbeddings = MergeDocuments(itemsProcessed, dataEmbeddings);
 
         // Get the query embedding from the end of the list.
         var queryEmbedding = dataEmbeddings.Last();
@@ -39,18 +42,8 @@ public class IndexModel(ILogger<IndexModel> logger) : PageModel
 
     #region Helper Methods
 
-    private static void UpdateDocuments(List<KeyValuePair<int, Document>> itemsProcessed, List<KeyValuePair<string, float[]>> dataEmbeddings)
+    private static List<KeyValuePair<string, float[]>> MergeDocuments(List<KeyValuePair<int, Document>> itemsProcessed, List<KeyValuePair<string, float[]>> dataEmbeddings)
     {
-        // Save new embeddings.
-        for (var i = 0; i < dataEmbeddings.Count; i++)
-        {
-            DocumentManager.Update(new Document()
-            {
-                Content = dataEmbeddings[i].Key,
-                Embeddings = dataEmbeddings[i].Value
-            });
-        }
-
         // Include the embeddings that were loaded from the database.
         for (var i = 0; i < itemsProcessed.Count; i++)
         {
@@ -62,6 +55,21 @@ public class IndexModel(ILogger<IndexModel> logger) : PageModel
             {
                 dataEmbeddings.Add(new KeyValuePair<string, float[]>(itemsProcessed[i].Value.Content, itemsProcessed[i].Value.Embeddings));
             }
+        }
+
+        return dataEmbeddings;
+    }
+
+    private static void SaveDocuments(List<KeyValuePair<string, float[]>> dataEmbeddings)
+    {
+        // Save new embeddings.
+        for (var i = 0; i < dataEmbeddings.Count; i++)
+        {
+            DocumentManager.Update(new Document()
+            {
+                Content = dataEmbeddings[i].Key,
+                Embeddings = dataEmbeddings[i].Value
+            });
         }
     }
 
