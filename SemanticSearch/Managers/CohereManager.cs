@@ -17,17 +17,20 @@ namespace SemanticSearch.Managers
         {
             List<KeyValuePair<string, float[]>> result = [];
 
-            // Setup the API.
-            TornadoApi api = new([new ProviderAuthentication(LLmProviders.Cohere, _apiKey)]);
-
-            // Retrieve the embeddings for the data.
-            var embeddings = await api.Embeddings.GetEmbeddings(EmbeddingModel.Cohere.Gen3.Multilingual, data);
-            if (embeddings != null)
+            if (data.Length > 0)
             {
-                for (int i = 0; i < embeddings.Count; i++)
+                // Setup the API.
+                TornadoApi api = new([new ProviderAuthentication(LLmProviders.Cohere, _apiKey)]);
+
+                // Retrieve the embeddings for the data.
+                var embeddings = await api.Embeddings.GetEmbeddings(EmbeddingModel.Cohere.Gen3.Multilingual, data);
+                if (embeddings != null)
                 {
-                    // Add a new embedding consisting of the text and an array of embedding values.
-                    result.Add(new KeyValuePair<string,float[]>(data[i], embeddings[i]));
+                    for (int i = 0; i < embeddings.Count; i++)
+                    {
+                        // Add a new embedding consisting of the text and an array of embedding values.
+                        result.Add(new KeyValuePair<string,float[]>(data[i], embeddings[i]));
+                    }
                 }
             }
 
